@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Interview Complete - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('interview') }}">
+            AI Interviewer
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="interview-page">
+
+    <section class="interview-container">
+
+        <!-- Interview Complete -->
+        <h1>Interview Complete 🎉</h1>
+
+        <p>
+            You have completed your interview for:
+        </p>
+
+        <h2>
+            {{ role }}
+        </h2>
+
+        <p>
+            Interview Type:
+            <strong>{{ interview_type }}</strong>
+        </p>
+
+
+        <!-- Interview Summary -->
+        <div class="analysis-card">
+
+            <h2>
+                Your Interview Summary
+            </h2>
+
+            <p>
+                You answered
+                <strong>{{ answers|length }}</strong>
+                questions.
+            </p>
+
+        </div>
+
+
+        <!-- Overall Interview Score -->
+        <div class="analysis-card">
+
+            <h2>
+                Overall Interview Score
+            </h2>
+
+            {% set ns = namespace(total=0) %}
+
+            {% for evaluation in evaluations %}
+
+                {% set ns.total =
+                    ns.total + evaluation["score"]
+                %}
+
+            {% endfor %}
+
+
+            {% if evaluations|length > 0 %}
+
+                {% set average_score =
+                    ns.total / evaluations|length
+                %}
+
+                <div class="overall-score">
+
+                    {{ "%.1f"|format(average_score) }}/10
+
+                </div>
+
+                <p>
+                    Based on your performance across
+                    {{ evaluations|length }}
+                    questions.
+                </p>
+
+            {% else %}
+
+                <p>
+                    No evaluation available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Overall Strengths -->
+        <div class="analysis-card">
+
+            <h2>
+                Overall Strengths
+            </h2>
+
+            {% set ns = namespace(strengths=[]) %}
+
+            {% for evaluation in evaluations %}
+
+                {% for strength in evaluation["strengths"] %}
+
+                    {% if strength not in ns.strengths %}
+
+                        {% set ns.strengths =
+                            ns.strengths + [strength]
+                        %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+
+            {% if ns.strengths %}
+
+                <ul>
+
+                    {% for strength in ns.strengths[:5] %}
+
+                        <li>
+                            {{ strength }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>
+                    No major strengths identified yet.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Areas to Improve -->
+        <div class="analysis-card">
+
+            <h2>
+                Areas to Improve
+            </h2>
+
+            {% set ns = namespace(improvements=[]) %}
+
+            {% for evaluation in evaluations %}
+
+                {% for improvement in evaluation["improvements"] %}
+
+                    {% if improvement not in ns.improvements %}
+
+                        {% set ns.improvements =
+                            ns.improvements + [improvement]
+                        %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+
+            {% if ns.improvements %}
+
+                <ul>
+
+                    {% for improvement in ns.improvements[:5] %}
+
+                        <li>
+                            {{ improvement }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>
+                    No major improvements identified.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+<!-- AI Final Interview Report -->
+<div class="analysis-card">
+
+    <h2>
+        AI Final Interview Report
+    </h2>
+
+    <div class="overall-score">
+
+        {{ final_report["overall_score"] }}/100
+
+    </div>
+
+
+    <h3>
+        Technical Knowledge
+    </h3>
+
+    <p>
+        {{ final_report["technical_score"] }}/100
+    </p>
+
+
+    <h3>
+        Problem Solving
+    </h3>
+
+    <p>
+        {{ final_report["problem_solving_score"] }}/100
+    </p>
+
+
+    <h3>
+        Communication
+    </h3>
+
+    <p>
+        {{ final_report["communication_score"] }}/100
+    </p>
+
+
+    <h3>
+        AI Summary
+    </h3>
+
+    <p>
+        {{ final_report["summary"] }}
+    </p>
+
+
+    <h3>
+        Strengths
+    </h3>
+
+    <ul>
+
+        {% for strength in final_report["strengths"] %}
+
+            <li>
+                {{ strength }}
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+    <h3>
+        Weaknesses
+    </h3>
+
+    <ul>
+
+        {% for weakness in final_report["weaknesses"] %}
+
+            <li>
+                {{ weakness }}
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+    <h3>
+        Topics to Improve
+    </h3>
+
+    <ul>
+
+        {% for topic in final_report["topics_to_improve"] %}
+
+            <li>
+                {{ topic }}
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+    <h3>
+        AI Hiring Recommendation
+    </h3>
+
+    <p>
+        {{ final_report["recommendation"] }}
+    </p>
+
+</div>
+        <!-- Final Feedback -->
+        <div class="analysis-card">
+
+            <h2>
+                Final Interview Feedback
+            </h2>
+
+            {% if evaluations|length >= questions|length %}
+
+                <p>
+                    You completed the interview successfully.
+                    Review your strengths and focus on the
+                    improvement areas identified by the AI evaluator.
+                </p>
+
+            {% else %}
+
+                <p>
+                    Continue practicing your interview answers.
+                    Try to provide clear explanations,
+                    relevant examples, and logical reasoning.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Individual Question Evaluations -->
+        <div class="analysis-card">
+
+            <h2>
+                Your Interview Evaluation
+            </h2>
+
+
+            {% for question in questions %}
+
+                <div class="interview-answer">
+
+                   <h3>
+    Question {{ question_numbers[loop.index0] }}
+</h3>
+
+
+                    <p>
+                        <strong>
+                            {{ question }}
+                        </strong>
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Your Answer:
+                        </strong>
+                    </p>
+
+                    <p>
+                        {{ answers[loop.index0] }}
+                    </p>
+
+
+                    <!-- Score -->
+                    <p>
+                        <strong>
+                            Score:
+                            {{ evaluations[loop.index0]["score"] }}/10
+                        </strong>
+                    </p>
+
+
+                    <!-- AI Feedback -->
+                    <p>
+                        <strong>
+                            Feedback:
+                        </strong>
+
+                        {{ evaluations[loop.index0]["feedback"] }}
+                    </p>
+
+
+                    <!-- Strengths -->
+                    {% if evaluations[loop.index0]["strengths"] %}
+
+                        <p>
+                            <strong>
+                                Strengths:
+                            </strong>
+                        </p>
+
+                        <ul>
+
+                            {% for strength in
+                                evaluations[loop.index0]["strengths"] %}
+
+                                <li>
+                                    {{ strength }}
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% endif %}
+
+
+                    <!-- Improvements -->
+                    {% if evaluations[loop.index0]["improvements"] %}
+
+                        <p>
+                            <strong>
+                                Areas to Improve:
+                            </strong>
+                        </p>
+
+                        <ul>
+
+                            {% for improvement in
+                                evaluations[loop.index0]["improvements"] %}
+
+                                <li>
+                                    {{ improvement }}
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="interview-actions">
+
+            <a
+                href="{{ url_for('interview') }}"
+                class="primary-button"
+            >
+                Start Another Interview
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

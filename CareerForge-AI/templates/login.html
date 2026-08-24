@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-container">
+
+            {% for category, message in messages %}
+
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+</header>
+
+
+<main class="result-page">
+
+    <section class="resume-result">
+
+        <h1>Login</h1>
+
+        <form
+            action="{{ url_for('login') }}"
+            method="POST"
+            class="job-form"
+        >
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                required
+            >
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                Login
+            </button>
+
+        </form>
+
+        <p>
+            Don't have an account?
+            <a href="{{ url_for('register') }}">
+                Create Account
+            </a>
+        </p>
+
+    </section>
+
+</main>
+<script>
+    setTimeout(function () {
+        const messages = document.querySelectorAll(".flash-message");
+
+        messages.forEach(function (message) {
+            message.style.transition = "opacity 0.5s ease";
+            message.style.opacity = "0";
+
+            setTimeout(function () {
+                message.remove();
+            }, 500);
+        });
+    }, 3000);
+</script>
+
+</body>
+
+</html>

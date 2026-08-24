@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Career Assistant - CareerPilot AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        /* =================================================
+           PAGE
+        ================================================= */
+
+        .career-assistant-page {
+            max-width: 950px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .career-assistant-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 40px;
+            box-shadow:
+                0 15px 40px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .assistant-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .assistant-icon {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            font-size: 38px;
+        }
+
+        .assistant-header h1 {
+            margin-bottom: 10px;
+        }
+
+        .assistant-header p {
+            color: #64748b;
+            font-size: 18px;
+        }
+
+
+        /* =================================================
+           INITIAL GREETING
+        ================================================= */
+
+        .voice-greeting {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #334155;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .start-chat-area {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .start-chat-button {
+            padding: 13px 24px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #1e293b;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .start-chat-button:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+
+        /* =================================================
+           CONVERSATION
+        ================================================= */
+
+        .conversation-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .chat-message {
+            padding: 18px;
+            border-radius: 16px;
+            line-height: 1.7;
+        }
+
+        .user-message {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            margin-left: 10%;
+        }
+
+        .assistant-message {
+            background: #ffffff;
+            border: 1px solid #dbe3ea;
+            margin-right: 10%;
+        }
+
+        .chat-label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .chat-content {
+            white-space: pre-wrap;
+            color: #334155;
+        }
+
+
+        /* =================================================
+           READ ANSWER + STOP
+        ================================================= */
+
+        .answer-voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+
+        /* =================================================
+           CONTINUE PROMPT
+        ================================================= */
+
+        .career-chat-controls {
+            margin-top: 35px;
+            padding-top: 28px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .continue-prompt {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            color: #475569;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .continue-title {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+
+        /* =================================================
+           QUESTION BOX
+        ================================================= */
+
+        .question-box {
+            width: 100%;
+            min-height: 130px;
+            resize: vertical;
+            padding: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .question-box:focus {
+            border-color: #64748b;
+            box-shadow:
+                0 0 0 3px rgba(100, 116, 139, 0.12);
+        }
+
+
+        /* =================================================
+           VOICE BUTTONS
+        ================================================= */
+
+        .voice-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .voice-button {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #1e293b;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .voice-button:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .voice-button.active {
+            background: #f1f5f9;
+            border-color: #475569;
+        }
+
+        .assistant-status {
+            margin-top: 12px;
+            color: #64748b;
+            min-height: 24px;
+        }
+
+
+        /* =================================================
+           ASK AI
+        ================================================= */
+
+        .ask-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .ask-button:hover {
+            background: #1e293b;
+        }
+
+
+        /* =================================================
+           CONVERSATION ENDED
+        ================================================= */
+
+        .conversation-ended {
+            margin-top: 35px;
+            padding-top: 28px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .conversation-ended-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        .conversation-ended-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+
+        /* =================================================
+           EXIT
+        ================================================= */
+
+        .exit-chat-form {
+            margin-top: 15px;
+        }
+
+        .exit-chat-button {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #475569;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .exit-chat-button:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 700px) {
+
+            .career-assistant-card {
+                padding: 24px;
+            }
+
+            .career-assistant-page {
+                margin-top: 30px;
+            }
+
+            .user-message {
+                margin-left: 0;
+            }
+
+            .assistant-message {
+                margin-right: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('interview') }}">
+            AI Interviewer
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="career-assistant-page">
+
+    <section class="career-assistant-card">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================= -->
+
+        <div class="assistant-header">
+
+            <div class="assistant-icon">
+                🤖
+            </div>
+
+            <h1>
+                Career Assistant
+            </h1>
+
+            <p>
+                Your personal AI career companion
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             FIRST OPENING
+        ================================================= -->
+
+        {% if not conversation %}
+
+        <div
+            class="voice-greeting"
+            id="initialGreeting"
+        >
+            🔊
+            Hi! I'm your CareerPilot AI assistant.
+            How can I help you today?
+        </div>
+
+
+        <div
+            class="start-chat-area"
+            id="startChatArea"
+        >
+
+            <button
+                type="button"
+                class="start-chat-button"
+                id="startChatButton"
+            >
+                🎤 Start Conversation
+            </button>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             CONVERSATION HISTORY
+        ================================================= -->
+
+        {% if conversation %}
+
+        <div class="conversation-container">
+
+            {% for message in conversation %}
+
+                {% if message["role"] == "user" %}
+
+                    <div
+                        class="chat-message user-message"
+                    >
+
+                        <div class="chat-label">
+                            You
+                        </div>
+
+                        <div class="chat-content">
+                            {{ message["content"] }}
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div
+                        class="chat-message assistant-message"
+                    >
+
+                        <div class="chat-label">
+                            CareerPilot AI
+                        </div>
+
+                        <div class="chat-content">
+                            {{ message["content"] }}
+                        </div>
+
+
+                        <div class="answer-voice-controls">
+
+                            <button
+                                type="button"
+                                class="voice-button speak-message"
+                                data-text="{{ message['content'] | e }}"
+                            >
+                                🔊 Read Answer
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="voice-button stop-speech-button"
+                            >
+                                ⏹ Stop
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             CONTINUE CONVERSATION
+        ================================================= -->
+
+        {% if conversation and not conversation_ended %}
+
+        <div
+            class="career-chat-controls"
+            id="careerChatControls"
+        >
+
+            <div
+                class="continue-prompt"
+                id="continuePrompt"
+            >
+                Is there anything else you'd like to know?
+                I'm happy to continue helping you.
+            </div>
+
+
+            <span class="continue-title">
+                Continue the conversation
+            </span>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('career_assistant') }}"
+                id="careerChatForm"
+            >
+
+                <textarea
+                    id="question"
+                    name="question"
+                    class="question-box"
+                    rows="4"
+                    placeholder="Ask anything about your career, resume, skills, projects, interviews..."
+                    required
+                ></textarea>
+
+
+                <div class="voice-controls">
+
+                    <button
+                        type="button"
+                        class="voice-button"
+                        id="startListening"
+                    >
+                        🎤 Speak
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="voice-button"
+                        id="stopListening"
+                    >
+                        ⏹ Stop
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="assistant-status"
+                    id="assistantStatus"
+                >
+                    Voice assistant ready.
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="ask-button"
+                >
+                    Ask AI
+                </button>
+
+            </form>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('exit_career_assistant') }}"
+                class="exit-chat-form"
+            >
+
+                <button
+                    type="submit"
+                    class="exit-chat-button"
+                >
+                    Exit Conversation
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             AUTOMATICALLY ENDED CONVERSATION
+        ================================================= -->
+
+        {% if conversation_ended %}
+
+        <div class="conversation-ended">
+
+            <div
+                class="conversation-ended-box"
+                id="conversationEndedBox"
+            >
+
+                <div class="conversation-ended-title">
+                    Conversation Ended
+                </div>
+
+                Thank you for chatting with
+                CareerPilot AI.
+
+                <br>
+
+                I'm glad I could help with your
+                career questions.
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('exit_career_assistant') }}"
+                class="exit-chat-form"
+            >
+
+                <button
+                    type="submit"
+                    class="exit-chat-button"
+                >
+                    Exit Conversation
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+
+/* =====================================================
+   INITIAL GREETING
+===================================================== */
+
+{% if not conversation %}
+
+window.addEventListener(
+    "load",
+    function() {
+
+        if ("speechSynthesis" in window) {
+
+            const greeting =
+                "Hi! I'm your CareerPilot AI assistant. " +
+                "How can I help you today?";
+
+            const speech =
+                new SpeechSynthesisUtterance(
+                    greeting
+                );
+
+            speech.rate = 0.95;
+            speech.pitch = 1;
+            speech.volume = 1;
+
+            window.speechSynthesis.speak(
+                speech
+            );
+
+        }
+
+    }
+);
+
+{% endif %}
+
+
+/* =====================================================
+   READ FULL AI ANSWER MANUALLY
+===================================================== */
+
+const speakButtons =
+    document.querySelectorAll(
+        ".speak-message"
+    );
+
+
+speakButtons.forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    "speechSynthesis"
+                    in window
+                ) {
+
+                    window.speechSynthesis.cancel();
+
+
+                    const text =
+                        button.getAttribute(
+                            "data-text"
+                        );
+
+
+                    const speech =
+                        new SpeechSynthesisUtterance(
+                            text
+                        );
+
+
+                    speech.rate = 0.95;
+                    speech.pitch = 1;
+                    speech.volume = 1;
+
+
+                    window.speechSynthesis.speak(
+                        speech
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   STOP AI SPEECH
+===================================================== */
+
+const stopSpeechButtons =
+    document.querySelectorAll(
+        ".stop-speech-button"
+    );
+
+
+stopSpeechButtons.forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    "speechSynthesis"
+                    in window
+                ) {
+
+                    window.speechSynthesis.cancel();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   SPEAK CONTINUE PROMPT WHEN USER REACHES IT
+===================================================== */
+
+const careerChatControls =
+    document.getElementById(
+        "careerChatControls"
+    );
+
+
+const continuePrompt =
+    document.getElementById(
+        "continuePrompt"
+    );
+
+
+if (
+    careerChatControls &&
+    continuePrompt &&
+    "speechSynthesis" in window
+) {
+
+    const assistantMessages =
+        document.querySelectorAll(
+            ".assistant-message"
+        );
+
+
+    if (
+        assistantMessages.length > 0
+    ) {
+
+        const latestAssistant =
+            assistantMessages[
+                assistantMessages.length - 1
+            ];
+
+
+        const latestAnswer =
+            latestAssistant.querySelector(
+                ".chat-content"
+            );
+
+
+        let answerKey = "";
+
+        if (latestAnswer) {
+
+            answerKey =
+                latestAnswer.innerText.trim();
+
+        }
+
+
+        const previousSpoken =
+            sessionStorage.getItem(
+                "careerAssistantFollowupFor"
+            );
+
+
+        let spoken = false;
+
+
+        const observer =
+            new IntersectionObserver(
+                function(entries) {
+
+                    entries.forEach(
+                        function(entry) {
+
+                            if (
+                                entry.isIntersecting &&
+                                !spoken &&
+                                answerKey &&
+                                answerKey !==
+                                previousSpoken
+                            ) {
+
+                                spoken = true;
+
+
+                                sessionStorage.setItem(
+                                    "careerAssistantFollowupFor",
+                                    answerKey
+                                );
+
+
+                                window.speechSynthesis.cancel();
+
+
+                                const speech =
+                                    new SpeechSynthesisUtterance(
+                                        "Is there anything else " +
+                                        "you'd like to know? " +
+                                        "I'm happy to continue " +
+                                        "helping you."
+                                    );
+
+
+                                speech.rate =
+                                    0.95;
+
+                                speech.pitch =
+                                    1;
+
+                                speech.volume =
+                                    1;
+
+
+                                window.speechSynthesis.speak(
+                                    speech
+                                );
+
+
+                                observer.disconnect();
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.45
+                }
+            );
+
+
+        observer.observe(
+            careerChatControls
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   START FIRST CONVERSATION
+===================================================== */
+
+const startChatButton =
+    document.getElementById(
+        "startChatButton"
+    );
+
+
+if (startChatButton) {
+
+    startChatButton.addEventListener(
+        "click",
+        function() {
+
+            const startArea =
+                document.getElementById(
+                    "startChatArea"
+                );
+
+
+            if (!startArea) {
+                return;
+            }
+
+
+            startArea.innerHTML = `
+
+                <form
+                    method="POST"
+                    action="{{ url_for('career_assistant') }}"
+                    id="firstQuestionForm"
+                >
+
+                    <label
+                        for="firstQuestion"
+                        class="continue-title"
+                    >
+                        How can I help you today?
+                    </label>
+
+
+                    <textarea
+                        id="firstQuestion"
+                        name="question"
+                        class="question-box"
+                        rows="4"
+                        placeholder="Type your question..."
+                        required
+                    ></textarea>
+
+
+                    <div class="voice-controls">
+
+                        <button
+                            type="button"
+                            class="voice-button"
+                            id="firstSpeakButton"
+                        >
+                            🎤 Speak
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="ask-button"
+                        >
+                            Ask AI
+                        </button>
+
+                    </div>
+
+                </form>
+
+            `;
+
+
+            const firstSpeakButton =
+                document.getElementById(
+                    "firstSpeakButton"
+                );
+
+
+            const firstQuestion =
+                document.getElementById(
+                    "firstQuestion"
+                );
+
+
+            const SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
+
+
+            if (
+                SpeechRecognition &&
+                firstSpeakButton &&
+                firstQuestion
+            ) {
+
+                firstSpeakButton.addEventListener(
+                    "click",
+                    function() {
+
+                        const recognition =
+                            new SpeechRecognition();
+
+
+                        recognition.lang =
+                            "en-US";
+
+
+                        recognition.continuous =
+                            false;
+
+
+                        recognition.interimResults =
+                            false;
+
+
+                        recognition.onresult =
+                            function(event) {
+
+                                firstQuestion.value =
+                                    event
+                                        .results[0][0]
+                                        .transcript;
+
+                            };
+
+
+                        recognition.start();
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   VOICE INPUT FOR CONTINUING CHAT
+===================================================== */
+
+const questionBox =
+    document.getElementById(
+        "question"
+    );
+
+
+const startListening =
+    document.getElementById(
+        "startListening"
+    );
+
+
+const stopListening =
+    document.getElementById(
+        "stopListening"
+    );
+
+
+const assistantStatus =
+    document.getElementById(
+        "assistantStatus"
+    );
+
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+let recognition = null;
+
+
+if (
+    SpeechRecognition &&
+    questionBox &&
+    startListening
+) {
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        true;
+
+
+    recognition.lang =
+        "en-US";
+
+
+    recognition.onstart =
+        function() {
+
+            if (assistantStatus) {
+
+                assistantStatus.textContent =
+                    "🎤 Listening... Speak now.";
+
+            }
+
+
+            startListening.classList.add(
+                "active"
+            );
+
+        };
+
+
+    recognition.onresult =
+        function(event) {
+
+            let transcript = "";
+
+
+            for (
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ) {
+
+                transcript +=
+                    event.results[i][0]
+                        .transcript;
+
+            }
+
+
+            questionBox.value =
+                transcript;
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            if (assistantStatus) {
+
+                assistantStatus.textContent =
+                    "Voice error: " +
+                    event.error;
+
+            }
+
+
+            startListening.classList.remove(
+                "active"
+            );
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            if (assistantStatus) {
+
+                assistantStatus.textContent =
+                    "Voice assistant ready.";
+
+            }
+
+
+            startListening.classList.remove(
+                "active"
+            );
+
+        };
+
+
+    startListening.onclick =
+        function() {
+
+            try {
+
+                recognition.start();
+
+            }
+            catch (error) {
+
+                console.log(
+                    "Recognition already running."
+                );
+
+            }
+
+        };
+
+
+    if (stopListening) {
+
+        stopListening.onclick =
+            function() {
+
+                try {
+
+                    recognition.stop();
+
+                }
+                catch (error) {
+
+                    console.log(
+                        "Recognition already stopped."
+                    );
+
+                }
+
+            };
+
+    }
+
+}
+
+
+/* =====================================================
+   STOP SPEECH WHEN LEAVING PAGE
+===================================================== */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        if (
+            "speechSynthesis"
+            in window
+        ) {
+
+            window.speechSynthesis.cancel();
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

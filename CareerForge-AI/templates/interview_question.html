@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Interview - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="interview-page">
+
+    <section class="interview-container">
+
+        <h1>AI Interviewer</h1>
+
+        <!-- Interview Progress -->
+        <div class="interview-progress">
+
+            <div class="progress-header">
+
+                <span>Interview Progress</span>
+
+                <span>
+                    Question {{ question_number }} / {{ total_questions }}
+                </span>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width: {{ (question_number / total_questions) * 100 }}%;"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <p>
+            Role: <strong>{{ role }}</strong>
+        </p>
+
+        <p>
+            Interview Type:
+            <strong>{{ interview_type }}</strong>
+        </p>
+
+
+        <div class="question-card">
+
+    <div class="question-badge">
+        Question {{ question_number }}
+    </div>
+
+    <h2>
+        {{ question }}
+    </h2>
+{% if skip_attempts is defined %}
+
+    <p>
+        Unable-to-answer attempts:
+        <strong>{{ skip_attempts }}/3</strong>
+    </p>
+
+{% endif %}
+    <button
+        type="button"
+        id="speakQuestion"
+        class="secondary-button"
+    >
+        🔊 Read Question
+    </button>
+
+</div>
+
+        <form
+    method="POST"
+    action="{{ url_for('interview_answer') }}"
+>
+
+            <input
+                type="hidden"
+                name="question_number"
+                value="{{ question_number }}"
+            >
+
+            <input
+                type="hidden"
+                name="role"
+                value="{{ role }}"
+            >
+
+            <input
+                type="hidden"
+                name="interview_type"
+                value="{{ interview_type }}"
+            >
+
+            <label for="answer">
+                Your Answer
+            </label>
+
+           <div class="voice-answer-box">
+
+    <textarea
+        id="answer"
+        name="answer"
+        rows="7"
+        placeholder="Type your answer or use the microphone..."
+        required
+    ></textarea>
+
+   <div class="voice-controls">
+
+    <button
+        type="button"
+        id="startListening"
+        class="secondary-button"
+    >
+        🎤 Start Speaking
+    </button>
+
+    <button
+        type="button"
+        id="stopListening"
+        class="secondary-button"
+        disabled
+    >
+        ⏹ Stop
+    </button>
+
+</div>
+ 
+
+<p
+    id="voiceStatus"
+    class="voice-status"
+>
+    Voice assistant ready.
+</p>
+
+           <div class="answer-actions">
+
+    <form
+        method="POST"
+        action="{{ url_for('interview_answer') }}"
+    >
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            Submit Answer
+        </button>
+
+    </form>
+
+
+    <form
+        method="POST"
+        action="{{ url_for('interview_skip') }}"
+    >
+
+        <button
+            type="submit"
+            class="secondary-button"
+        >
+            I can't answer/Skip
+        </button>
+
+    </form>
+
+</div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+<script>
+
+    const questionText = {{ question | tojson }};
+
+    const answerBox =
+        document.getElementById("answer");
+
+    const speakButton =
+        document.getElementById("speakQuestion");
+
+    const startButton =
+        document.getElementById("startListening");
+
+    const stopButton =
+        document.getElementById("stopListening");
+
+    const voiceStatus =
+        document.getElementById("voiceStatus");
+
+
+    // =========================
+    // READ QUESTION
+    // =========================
+
+    speakButton.addEventListener(
+        "click",
+        function () {
+
+            if (!("speechSynthesis" in window)) {
+
+                voiceStatus.textContent =
+                    "Voice output is not supported.";
+
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            const speech =
+                new SpeechSynthesisUtterance(
+                    questionText
+                );
+
+            speech.lang = "en-US";
+            speech.rate = 0.95;
+            speech.pitch = 1;
+
+            voiceStatus.textContent =
+                "🔊 AI is speaking...";
+
+            window.speechSynthesis.speak(
+                speech
+            );
+
+            speech.onend = function () {
+
+                voiceStatus.textContent =
+                    "Voice assistant ready.";
+
+            };
+
+        }
+    );
+
+
+    // =========================
+    // SPEECH RECOGNITION
+    // =========================
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    let recognition = null;
+
+
+    if (!SpeechRecognition) {
+
+        startButton.disabled = true;
+        stopButton.disabled = true;
+
+        voiceStatus.textContent =
+            "Speech recognition is not supported. Please use Chrome or Edge.";
+
+    } else {
+
+        recognition =
+            new SpeechRecognition();
+
+        recognition.lang = "en-US";
+
+        recognition.continuous = true;
+
+        recognition.interimResults = true;
+
+
+        // =========================
+        // START LISTENING
+        // =========================
+
+        startButton.addEventListener(
+            "click",
+            function () {
+
+                recognition.start();
+
+                startButton.disabled = true;
+                stopButton.disabled = false;
+
+                voiceStatus.textContent =
+                    "🎤 Listening... Speak your answer.";
+
+            }
+        );
+
+
+        // =========================
+        // SPEECH RESULT
+        // =========================
+
+        recognition.onresult =
+            function (event) {
+
+                let transcript = "";
+
+                for (
+                    let i = event.resultIndex;
+                    i < event.results.length;
+                    i++
+                ) {
+
+                    transcript +=
+                        event.results[i][0].transcript;
+
+                }
+
+                answerBox.value = transcript;
+
+            };
+
+
+        // =========================
+        // STOP LISTENING
+        // =========================
+
+        stopButton.addEventListener(
+            "click",
+            function () {
+
+                recognition.stop();
+
+            }
+        );
+
+
+        recognition.onend =
+            function () {
+
+                startButton.disabled = false;
+                stopButton.disabled = true;
+
+                voiceStatus.textContent =
+                    "Voice answer captured.";
+
+            };
+
+
+        recognition.onerror =
+            function (event) {
+
+                startButton.disabled = false;
+                stopButton.disabled = true;
+
+                voiceStatus.textContent =
+                    "Voice error: " + event.error;
+
+            };
+
+    }
+
+</script>
+
+</body>
+
+</html>

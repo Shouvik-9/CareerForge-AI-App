@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Job Match Result - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+            CareerPilot AI
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/job-match">Job Matcher</a>
+        </nav>
+
+    </header>
+
+
+    <main class="result-page">
+
+        <section class="resume-result">
+
+            <h1>Job Match Result</h1>
+
+
+            <div class="score-section">
+
+                <h2>Job Match</h2>
+
+                <div class="score-card">
+
+                    <div class="score-number">
+                        {{ match_result.match_percentage }}%
+                    </div>
+
+                    <p>
+                        Percentage of detected job skills matched by the resume.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <section class="analysis-section">
+
+                <h2>Matched Skills</h2>
+
+                <div class="analysis-card">
+
+                    {% if match_result.matched_skills %}
+
+                        <div class="skills-list">
+
+                            {% for skill in match_result.matched_skills %}
+
+                                <span class="skill-tag">
+                                    {{ skill }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <p>No matching skills detected.</p>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+            <section class="analysis-section">
+
+                <h2>Missing Skills</h2>
+
+                <div class="analysis-card">
+
+                    {% if match_result.missing_skills %}
+
+                        <div class="skills-list">
+
+                            {% for skill in match_result.missing_skills %}
+
+                                <span class="skill-tag">
+                                    {{ skill }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <p>No missing skills detected.</p>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+<section class="analysis-section">
+
+    <h2>Skill Gap Recommendations</h2>
+
+    {% if skill_gap.recommendations %}
+
+        {% for item in skill_gap.recommendations %}
+
+            <div class="analysis-card">
+
+                <h3>{{ item.skill }}</h3>
+
+                <p>
+                    <strong>Priority:</strong>
+                    {{ item.priority }}
+                </p>
+
+                <p>
+                    {{ item.recommendation }}
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="analysis-card">
+
+            <p>
+                No major skill gaps were detected.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+            <a href="/job-match" class="primary-button">
+                Analyze Another Job
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 CareerPilot AI. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CareerPilot AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-container">
+
+            {% for category, message in messages %}
+
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+    <header class="navbar">
+    <a
+    href="{{ url_for('home') }}"
+    class="brand-logo"
+>
+    <img
+        src="/static/images/logo.png"
+        alt="CareerPilot AI"
+    >
+</a>
+
+       <nav>
+
+    <a href="{{ url_for('home') }}">
+        Home
+    </a>
+
+    <a href="#features">
+        Features
+    </a>
+
+    <a href="#about">
+        About
+    </a>
+
+    {% if session.get("user_id") %}
+
+
+    <details class="profile-menu">
+
+        <summary>
+            Profile
+        </summary>
+
+        <div class="profile-dropdown">
+
+            <h4>
+                {{ session.get("user_name") }}
+            </h4>
+
+            <p>
+                {{ session.get("user_email") }}
+            </p>
+
+            <a href="{{ url_for('logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </details>
+
+{% else %}
+
+    <a href="{{ url_for('login') }}">
+        Login
+    </a>
+
+    <a href="{{ url_for('register') }}">
+        Sign Up
+    </a>
+
+{% endif %}
+
+</nav>
+    </header>
+    {% if session.get("user_id") %}
+
+    <div class="welcome-banner">
+
+        <h2>
+            Hey, {{ session.get("user_first_name") }} 👋
+        </h2>
+
+        <p>
+            Welcome to CareerPilot AI. Ready to grow your career?
+        </p>
+
+    </div>
+
+{% endif %}
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="tagline">AI-POWERED CAREER INTELLIGENCE</p>
+
+                <h1>
+                    Build Your Career
+                    <span>Smarter with AI</span>
+                </h1>
+
+                <p class="description">
+                    Analyze your resume, match jobs, identify skill gaps
+                    and prepare for interviews with CareerPilot AI.
+                </p>
+
+                <div class="resume-upload">
+
+    <h2>Analyze Your Resume</h2>
+
+    <p>
+        Upload your resume in PDF format to begin your CareerPilot AI analysis.
+    </p>
+
+    <form
+        action="{{ url_for('upload_resume') }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <label for="resume">
+            Choose Resume PDF
+        </label>
+
+        <input
+            type="file"
+            id="resume"
+            name="resume"
+            accept=".pdf"
+            required
+        >
+
+        <button type="submit">
+            Upload Resume
+        </button>
+
+    </form>
+
+</div>
+
+            </div>
+
+        </section>
+
+       <section class="features" id="features">
+
+            <h2>Everything You Need to Grow Your Career</h2>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+
+    <h3>ATS Score</h3>
+
+    <p>
+        Find out how well your resume matches
+        a target job description.
+    </p>
+
+   <a
+    href="{{ url_for('ats_score') }}"
+    class="primary-button"
+>
+    Check ATS Score
+</a>
+
+</div>
+               <div class="feature-card">
+
+    <h3>Job Matcher</h3>
+
+    <p>
+        Compare your resume with a target job description
+        and identify matched and missing skills.
+    </p>
+
+    <a href="{{ url_for('job_match') }}" class="primary-button">
+        Match a Job
+    </a>
+
+</div>
+
+                <div class="feature-card">
+
+    <h3>AI Interviewer</h3>
+
+    <p>
+        Practice technical and HR interviews with
+        personalized AI-powered evaluation.
+    </p>
+
+   <a
+    href="{{ url_for('interview') }}"
+    class="primary-button"
+>
+    Start Interview
+</a>
+
+</div>
+
+               <div class="feature-card">
+
+    <h3>Career Assistant</h3>
+
+    <p>
+        Ask career questions and receive personalized
+        guidance based on your goals.
+    </p>
+
+   <a
+    href="{{ url_for('career_assistant') }}"
+    class="primary-button"
+>
+    Ask AI
+</a>
+
+</div>
+
+             <div class="feature-card">
+
+    <h3>Career Roadmap</h3>
+
+    <p>
+        Get a personalized learning roadmap based
+        on your target career and skill gaps.
+    </p>
+
+   <a
+    href="{{ url_for('career_roadmap') }}"
+    class="primary-button"
+>
+    Build Roadmap
+</a>
+
+</div>
+
+</div>
+
+</section>
+    <section class="about-section" id="about">
+
+    <div class="about-content">
+
+        <p class="about-label">
+            ABOUT CAREERPILOT AI
+        </p>
+
+        <h2>
+            Your AI-Powered Career Companion
+        </h2>
+
+        <p>
+            CareerPilot AI helps job seekers understand their resume,
+            evaluate ATS compatibility, compare their profile with job
+            descriptions, identify skill gaps, and prepare for their
+            career journey.
+        </p>
+
+        <p>
+            Instead of using separate tools for resume analysis,
+            job matching, and skill planning, CareerPilot brings
+            these capabilities together in one platform.
+        </p>
+
+        <div class="about-highlights">
+
+            <div class="about-item">
+                <h3>Resume Intelligence</h3>
+                <p>
+                    Extract and organize important information
+                    from your resume.
+                </p>
+            </div>
+
+            <div class="about-item">
+                <h3>Career Matching</h3>
+                <p>
+                    Compare your skills with the requirements
+                    of target roles.
+                </p>
+            </div>
+
+            <div class="about-item">
+                <h3>Skill Growth</h3>
+                <p>
+                    Identify missing skills and create a path
+                    for improvement.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 CareerPilot AI. All rights reserved.</p>
+    </footer>
+
+<script>
+    setTimeout(function () {
+        const messages = document.querySelectorAll(".flash-message");
+
+        messages.forEach(function (message) {
+            message.style.transition = "opacity 0.5s ease";
+            message.style.opacity = "0";
+
+            setTimeout(function () {
+                message.remove();
+            }, 500);
+        });
+    }, 3000);
+</script>
+</body>
+</html>

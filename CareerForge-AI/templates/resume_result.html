@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Resume Analysis - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+        <a href="/">Home</a>
+    </nav>
+
+</header>
+
+
+<main class="result-page">
+
+    <section class="resume-result">
+
+        <h1>Resume Uploaded Successfully</h1>
+
+        <p class="uploaded-file">
+            File:
+            <strong>{{ filename }}</strong>
+        </p>
+
+
+        <!-- ========================= -->
+        <!-- RESUME SCORE -->
+        <!-- ========================= -->
+
+        <section class="score-section">
+
+            <h2>Resume Score</h2>
+
+            <div class="score-card">
+
+                <div class="score-number">
+                    {{ resume_score }}/100
+                </div>
+
+                <p>
+                    This score represents the completeness of
+                    the information detected in your resume.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- SCORE BREAKDOWN -->
+        <!-- ========================= -->
+
+        <section class="score-breakdown-section">
+
+            <h2>Score Breakdown</h2>
+
+            <div class="score-breakdown">
+
+                {% for category, points in score_breakdown.items() %}
+
+                    <div class="score-row">
+
+                        <span>
+                            {{ category }}
+                        </span>
+
+                        <strong>
+                            {{ points }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- RESUME ANALYSIS -->
+        <!-- ========================= -->
+
+        <section class="analysis-section">
+
+            <h2>Resume Analysis</h2>
+
+            <div class="analysis-grid">
+
+
+                <!-- NAME -->
+
+                <div class="analysis-card">
+
+                    <h3>Name</h3>
+
+                    <p>
+                        {{ resume_data.name }}
+                    </p>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="analysis-card">
+
+                    <h3>Email</h3>
+
+                    <p>
+                        {{ resume_data.email }}
+                    </p>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="analysis-card">
+
+                    <h3>Phone</h3>
+
+                    <p>
+                        {{ resume_data.phone }}
+                    </p>
+
+                </div>
+
+
+               
+                              <!-- SKILLS -->
+
+                <div class="analysis-card skills-card">
+
+                    <h3>Skills</h3>
+
+                    {% if resume_data.skills %}
+
+                        <div class="skills-list">
+
+                            {% for skill in resume_data.skills %}
+
+                                <span class="skill-tag">
+                                    {{ skill }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <p>
+                            No known skills detected.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- EDUCATION -->
+        <!-- ========================= -->
+
+        <section class="analysis-section">
+
+            <h2>Education</h2>
+
+            <div class="analysis-card">
+
+                <p class="section-text">
+                    {{ resume_data.education }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- EXPERIENCE -->
+        <!-- ========================= -->
+
+        <section class="analysis-section">
+
+            <h2>Experience</h2>
+
+            <div class="analysis-card">
+
+                <p class="section-text">
+                    {{ resume_data.experience }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- PROJECTS -->
+        <!-- ========================= -->
+
+        <section class="analysis-section">
+
+            <h2>Projects</h2>
+
+            <div class="analysis-card">
+
+                <p class="section-text">
+                    {{ resume_data.projects }}
+                </p>
+
+            </div>
+
+        </section>
+<!-- ========================= -->
+<!-- DETECTED PDF LINKS -->
+<!-- ========================= -->
+
+<section class="analysis-section">
+
+    <h2>Detected PDF Links</h2>
+
+    <div class="analysis-card">
+
+        {% if pdf_links %}
+
+            <div class="detected-links">
+
+                {% for link in pdf_links %}
+
+                    <div class="detected-link-item">
+
+                        {% if "linkedin.com" in link|lower %}
+
+                            <strong>LinkedIn Profile</strong>
+
+                        {% elif "github.com" in link|lower %}
+
+                            <strong>GitHub Profile / Repository</strong>
+
+                        {% elif "mailto:" in link|lower %}
+
+                            <strong>Email</strong>
+
+                        {% else %}
+
+                            <strong>Other Link</strong>
+
+                        {% endif %}
+
+                        <a
+                            href="{{ link }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {{ link }}
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                No embedded links were detected in this PDF.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+        <!-- ========================= -->
+        <!-- EXTRACTED TEXT -->
+        <!-- ========================= -->
+
+        <section class="resume-text-section">
+
+            <h2>Extracted Resume Text</h2>
+
+            <div class="resume-text-box">
+
+                {% if resume_text %}
+
+                    <pre>{{ resume_text }}</pre>
+
+                {% else %}
+
+                    <p>
+                        No resume text was extracted.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ACTION BUTTON -->
+        <!-- ========================= -->
+
+        <a
+            href="/"
+            class="primary-button"
+        >
+            Upload Another Resume
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

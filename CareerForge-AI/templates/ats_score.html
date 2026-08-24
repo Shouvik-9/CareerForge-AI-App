@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ATS Score - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+           </nav>
+
+</header>
+
+
+<main class="result-page">
+
+    <section class="resume-result">
+
+        <h1>ATS Score</h1>
+
+        <section class="score-section">
+
+            <h2>Your ATS Score</h2>
+
+            <div class="score-card">
+
+                <div class="score-number">
+                    {{ ats_score }}/100
+                </div>
+
+                <p>
+                    This score indicates how well your resume
+                    is optimized for ATS-style screening.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        {% if score_breakdown %}
+
+        <section class="analysis-section">
+
+            <h2>Score Breakdown</h2>
+
+            {% for item, score in score_breakdown.items() %}
+
+            <div class="analysis-card">
+
+                <h3>
+                    {{ item }}
+                </h3>
+
+                <p>
+                    Score: {{ score }}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+        {% endif %}
+
+
+          </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ATS Score - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <nav>
+        <a href="/">Home</a>
+    </nav>
+
+</header>
+
+
+<main class="result-page">
+
+    <section class="resume-result">
+
+        <h1>ATS Compatibility Score</h1>
+
+        <p class="uploaded-file">
+            Resume:
+            <strong>{{ filename }}</strong>
+        </p>
+
+
+        <!-- ATS SCORE -->
+
+        <section class="score-section">
+
+            <div class="score-card">
+
+                <div class="score-number">
+                    {{ ats_score }}/100
+                </div>
+
+                <p>
+                    This is a rule-based ATS compatibility
+                    estimate based on resume structure,
+                    extractable text, sections, skills,
+                    contact information and professional links.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- BREAKDOWN -->
+
+        <section class="score-breakdown-section">
+
+            <h2>ATS Score Breakdown</h2>
+
+            <div class="score-breakdown">
+
+                {% for category, points in ats_breakdown.items() %}
+
+                    <div class="score-row">
+
+                        <span>
+                            {{ category }}
+                        </span>
+
+                        <strong>
+                            {{ points }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <a
+            href="/"
+            class="primary-button"
+        >
+            Back to CareerPilot
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 CareerPilot AI. All rights reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

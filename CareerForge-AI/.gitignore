@@ -1,0 +1,28 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Flask
+flask_session/
+
+# User uploads
+uploads/*
+
+# Generated files
+resume_text.txt
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+Flask
+Flask-Session
+python-dotenv
+Werkzeug
+pypdf
+PyMuPDF
+google-genai
+reportlab

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Job Matcher - CareerPilot AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+            CareerPilot AI
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+        </nav>
+
+    </header>
+
+
+    <main class="result-page">
+
+        <section class="resume-result">
+
+            <h1>Job Description Matcher</h1>
+
+            <p class="uploaded-file">
+                Upload your resume first, then compare it with a job description.
+            </p>
+
+
+            <form
+                action="{{ url_for('job_match') }}"
+                method="POST"
+                class="job-form"
+            >
+
+                <label for="job_description">
+                    Paste Job Description
+                </label>
+
+                <textarea
+                    id="job_description"
+                    name="job_description"
+                    rows="14"
+                    placeholder="Paste the complete job description here..."
+                    required
+                ></textarea>
+
+                <button type="submit" class="primary-button">
+                    Analyze Job Match
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 CareerPilot AI. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>

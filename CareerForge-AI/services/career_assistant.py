@@ -110,7 +110,7 @@ def format_conversation_history(
         elif role == "assistant":
 
             history_text += (
-                f"CAREERPILOT AI:\n"
+                f"CAREERFORAGE AI:\n"
                 f"{content}\n\n"
             )
 
@@ -232,7 +232,7 @@ def ask_career_ai(
     # -----------------------------------------------------
 
     prompt = f"""
-You are CareerPilot AI, a friendly, professional,
+You are CareerForage AI, a friendly, professional,
 and practical career assistant.
 
 You help candidates with:

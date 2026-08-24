@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Job Match Result - CareerPilot AI</title>
+    <title>Job Match Result - CareerForage AI</title>
 
     <link
         rel="stylesheet"
@@ -19,7 +19,7 @@
     <header class="navbar">
 
         <div class="logo">
-            CareerPilot AI
+            CareerForage AI
         </div>
 
         <nav>
@@ -167,7 +167,7 @@
     <footer>
 
         <p>
-            © 2026 CareerPilot AI. All rights reserved.
+            © 2026 CareerForage AI. All rights reserved.
         </p>
 
     </footer>
